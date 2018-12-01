@@ -1,0 +1,11 @@
+---
+fixtures:
+  repositories:
+    stdlib:
+      repo: "https://github.com/puppetlabs/puppetlabs-stdlib"
+      ref: "4.18.0"
+    gluster:
+      repo: "https://github.com/voxpupuli/puppet-gluster"
+      ref: "4.1.0"
+  symlinks:
+    vision_gluster: '#{source_dir}'
