@@ -3,7 +3,7 @@
 
 class vision_gluster::node (
 
-  String $version,
+  String $release,
   Integer $replica,
   Integer $arbiter,
   Array[String] $bricks,
@@ -22,13 +22,20 @@ class vision_gluster::node (
     ensure => directory,
   }
 
+  # set up gluster repo with appropriate version
+  class { '::gluster::repo::apt':
+    release => $release,
+    version => 'LATEST',
+  }
+
   # installs gluster server and client packages
   class { '::gluster':
     server                 => true,
     client                 => true,
-    repo                   => $repo,
+    # as per current module logic 'repo => false' is correct!
+    repo                   => false,
     use_exported_resources => false,
-    version                => $version,
+    require                => Class[::gluster::repo::apt]
   }
 
   gluster::peer { $peers:
