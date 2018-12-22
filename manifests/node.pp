@@ -21,10 +21,6 @@ class vision_gluster::node (
 
   $major = split($release, '\.')[0]
 
-  file { $brick_path:
-    ensure => directory,
-  }
-
   # set up gluster repo with appropriate version
   apt::source { 'glusterfs':
     location => "http://download.gluster.org/pub/gluster/glusterfs/${major}/${release}/Debian/${::lsbdistcodename}/amd64/apt/",
@@ -35,6 +31,7 @@ class vision_gluster::node (
       key_source => "https://download.gluster.org/pub/gluster/glusterfs/${release}/rsa.pub",
     },
     pin      => '500',
+    notify   => Exec['apt_update'],
   }
 
   # installs gluster server and client packages
