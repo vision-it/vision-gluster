@@ -15,17 +15,26 @@ class vision_gluster::node (
   Array[String] $volume_options = [],
   String $mount_options = 'noatime,nodev,nosuid',
   String $host = $::fqdn,
+  Boolean $force_volume = false, # required for creating volume in root-partition
 
   ) {
+
+  $major = split($release, '\.')[0]
 
   file { $brick_path:
     ensure => directory,
   }
 
   # set up gluster repo with appropriate version
-  class { '::gluster::repo::apt':
-    release => $release,
-    version => 'LATEST',
+  apt::source { 'glusterfs':
+    location => "http://download.gluster.org/pub/gluster/glusterfs/${major}/${release}/Debian/${::lsbdistcodename}/amd64/apt/",
+    release  => $::lsbdistcodename,
+    repos    => 'main',
+    key      => {
+      id         => 'F9C958A3AEE0D2184FAD1CBD43607F0DC2F8238C',
+      key_source => "https://download.gluster.org/pub/gluster/glusterfs/${release}/rsa.pub",
+    },
+    pin      => '500',
   }
 
   # installs gluster server and client packages
@@ -35,7 +44,7 @@ class vision_gluster::node (
     # as per current module logic 'repo => false' is correct!
     repo                   => false,
     use_exported_resources => false,
-    require                => Class[::gluster::repo::apt]
+    require                => Apt::Source['glusterfs']
   }
 
   gluster::peer { $peers:
@@ -47,14 +56,20 @@ class vision_gluster::node (
     arbiter => $arbiter,
     bricks  => $bricks,
     options => $volume_options,
+    force   => $force_volume,
     require => Gluster::Peer[ $peers ],
   }
 
   if ! empty($mount_path) {
+    file { $mount_path:
+      ensure => directory,
+    }
+
     gluster::mount { $mount_path:
       volume  => "${host}:/${volume_name}",
       atboot  => true,
       options => $mount_options,
+      require => File[$mount_path],
     }
   }
 }
