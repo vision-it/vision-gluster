@@ -10,12 +10,9 @@ class vision_gluster::node (
   Array[String] $peers, # nodes in the cluster
   String $volume_name,
   String $mount_path,
-  String $brick_path,
-  Boolean $repo = false,
   Array[String] $volume_options = [],
   String $mount_options = 'noatime,nodev,nosuid',
-  String $host = $::fqdn,
-  Boolean $force_volume = false, # required for creating volume in root-partition
+  String $mount_host = $::fqdn, # from whom to pull the gluster mount
 
   ) {
 
@@ -38,35 +35,39 @@ class vision_gluster::node (
   class { '::gluster':
     server                 => true,
     client                 => true,
-    # as per current module logic 'repo => false' is correct!
     repo                   => false,
     use_exported_resources => false,
     require                => Apt::Source['glusterfs']
   }
 
-  gluster::peer { $peers:
-    require => Class[::gluster::service],
+  # check if there are already servers connected to this cluster
+  $known_peers = $::gluster_peer_list
+  if $known_peers == undef or ! empty( split($known_peers, ',') - ($peers - $::fqdn) ) {
+    notice('Please join all servers into a cluster by running `gluster peer probe HOSTNAME` from one of the good hosts')
   }
 
-  gluster::volume { $volume_name:
-    replica => $replica,
-    arbiter => $arbiter,
-    bricks  => $bricks,
-    options => $volume_options,
-    force   => $force_volume,
-    require => Gluster::Peer[ $peers ],
+  # check if the volume is already set up on this host
+  $vols = $::gluster_volume_list
+  if $vols == undef or ! $volume_name in split($vols, ',') {
+    notice("Create the Gluster Volume ${volume_name} by running `/usr/local/sbin/gluster-create-${volume_name}.sh`")
+  } else {
+    if ! empty($mount_path) {
+      file { $mount_path:
+        ensure => directory,
+      }
+
+      gluster::mount { $mount_path:
+        volume  => "${mount_host}:/${volume_name}",
+        atboot  => true,
+        options => $mount_options,
+        require => File[$mount_path],
+      }
+    }
   }
 
-  if ! empty($mount_path) {
-    file { $mount_path:
-      ensure => directory,
-    }
-
-    gluster::mount { $mount_path:
-      volume  => "${host}:/${volume_name}",
-      atboot  => true,
-      options => $mount_options,
-      require => File[$mount_path],
-    }
+  file { "/usr/local/sbin/gluster-create-${volume_name}.sh":
+    ensure  => present,
+    content => template('vision_gluster/gluster-create-volume.sh.erb'),
+    mode    => '0750',
   }
 }
