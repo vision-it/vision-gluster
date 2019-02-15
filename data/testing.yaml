@@ -1,5 +1,4 @@
 ---
-vision_gluster::node::version: 'latest'
 vision_gluster::node::replica: 2
 vision_gluster::node::arbiter: 0
 vision_gluster::node::volume_name: 'gv0'

@@ -4,7 +4,7 @@
 class vision_gluster::node (
 
   String $apt_repo_key,
-  String $release,
+  String $release, # should be major.minor (e.g. 5.1)
   Integer $replica,
   Integer $arbiter,
   Array[String] $bricks,

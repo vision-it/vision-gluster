@@ -1,3 +1,3 @@
 ---
 vision_gluster::node::apt_repo_key: 'F9C958A3AEE0D2184FAD1CBD43607F0DC2F8238C'
-vision_gluster::node::release: 'LATEST'
+vision_gluster::node::release: '5.3'

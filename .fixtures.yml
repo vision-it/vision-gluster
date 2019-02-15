@@ -3,12 +3,12 @@ fixtures:
   repositories:
     stdlib:
       repo: "https://github.com/puppetlabs/puppetlabs-stdlib"
-      ref: "4.18.0"
+      ref: "4.24.0"
     apt:
       repo: "https://github.com/puppetlabs/puppetlabs-apt"
       ref: "5.0.1"
     gluster:
-      repo: "https://github.com/voxpupuli/puppet-gluster"
-      ref: "4.1.0"
+      repo: "https://github.com/vision-it/puppet-gluster"
+      ref: "master"
   symlinks:
     vision_gluster: '#{source_dir}'
