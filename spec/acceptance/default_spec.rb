@@ -7,26 +7,33 @@ describe 'vision_gluster' do
         class { 'vision_gluster::node': }
       FILE
 
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+      # This module is only implemented for Debian Stretch
+      if os[:release].to_i == 9
+        apply_manifest(pp, catch_failures: true)
+        apply_manifest(pp, catch_changes: true)
+      end
     end
   end
 
   context 'packages installed' do
-    describe package('glusterfs-client') do
-      it { is_expected.to be_installed }
-    end
-    describe package('glusterfs-server') do
-      it { is_expected.to be_installed }
-    end
-    describe package('glusterfs-common') do
-      it { is_expected.to be_installed }
+    if os[:release].to_i == 9
+      describe package('glusterfs-client') do
+        it { is_expected.to be_installed }
+      end
+      describe package('glusterfs-server') do
+        it { is_expected.to be_installed }
+      end
+      describe package('glusterfs-common') do
+        it { is_expected.to be_installed }
+      end
     end
   end
 
   context 'files provisioned' do
-    describe file('/opt/brick1') do
-      it { is_expected.to be_directory }
+    if os[:release].to_i == 9
+      describe file('/opt/brick1') do
+        it { is_expected.to be_directory }
+      end
     end
   end
 end
