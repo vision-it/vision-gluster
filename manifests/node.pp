@@ -53,8 +53,11 @@ class vision_gluster::node (
     notice("Create the Gluster Volume ${volume_name} by running `/usr/local/sbin/gluster-create-${volume_name}.sh`")
   } else {
     if ! empty($mount_path) {
-      file { $mount_path:
-        ensure => directory,
+      # ensure mount path is present, but only if it's not already defined by puppet
+      if !defined(File[$mount_path]) {
+        file { $mount_path:
+          ensure => directory,
+        }
       }
 
       gluster::mount { $mount_path:
