@@ -3,6 +3,7 @@
 
 class vision_gluster::node (
 
+  String $apt_repo_key,
   String $release,
   Integer $replica,
   Integer $arbiter,
@@ -14,7 +15,7 @@ class vision_gluster::node (
   String $mount_options = 'noatime,nodev,nosuid',
   String $mount_host = $::fqdn, # from whom to pull the gluster mount
 
-  ) {
+) {
 
   $major = split($release, '\.')[0]
 
@@ -24,7 +25,7 @@ class vision_gluster::node (
     release  => $::lsbdistcodename,
     repos    => 'main',
     key      => {
-      id         => 'F9C958A3AEE0D2184FAD1CBD43607F0DC2F8238C',
+      id         => $apt_repo_key,
       key_source => "https://download.gluster.org/pub/gluster/glusterfs/${release}/rsa.pub",
     },
     pin      => '500',
