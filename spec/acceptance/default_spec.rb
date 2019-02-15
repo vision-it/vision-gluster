@@ -21,7 +21,7 @@ describe 'vision_gluster' do
     end
     describe package('glusterfs-common') do
       it { is_expected.to be_installed }
-   end
+    end
   end
 
   context 'files provisioned' do
