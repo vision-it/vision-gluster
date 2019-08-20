@@ -14,22 +14,12 @@ class vision_gluster::node (
   Array[String] $volume_options = [],
   String $mount_options = 'noatime,nodev,nosuid',
   String $mount_host = $::fqdn, # from whom to pull the gluster mount
+  Boolean $manage_repo = false,
 
 ) {
 
-  $major = split($release, '\.')[0]
-
-  # set up gluster repo with appropriate version
-  apt::source { 'glusterfs':
-    location => "http://download.gluster.org/pub/gluster/glusterfs/${major}/${release}/Debian/${::lsbdistcodename}/amd64/apt/",
-    release  => $::lsbdistcodename,
-    repos    => 'main',
-    key      => {
-      id         => $apt_repo_key,
-      key_source => "https://download.gluster.org/pub/gluster/glusterfs/${release}/rsa.pub",
-    },
-    pin      => '500',
-    notify   => Exec['apt_update'],
+  if $manage_repo {
+    contain vision_gluster::repo
   }
 
   # installs gluster server and client packages
@@ -38,7 +28,6 @@ class vision_gluster::node (
     client                 => true,
     repo                   => false,
     use_exported_resources => false,
-    require                => Apt::Source['glusterfs']
   }
 
   # check if there are already servers connected to this cluster
