@@ -2,13 +2,16 @@
 fixtures:
   repositories:
     stdlib:
+      ref: "v6.0.0"
       repo: "https://github.com/puppetlabs/puppetlabs-stdlib"
-      ref: "4.24.0"
     apt:
+      ref: "v7.1.0"
       repo: "https://github.com/puppetlabs/puppetlabs-apt"
-      ref: "5.0.1"
+    mount_core:
+      ref: "1.0.3"
+      repo: "https://github.com/puppetlabs/puppetlabs-mount_core"
     gluster:
-      repo: "https://github.com/vision-it/puppet-gluster"
       ref: "master"
+      repo: "https://github.com/vision-it/puppet-gluster"
   symlinks:
     vision_gluster: '#{source_dir}'
