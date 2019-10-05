@@ -6,7 +6,6 @@ set -x
 <%= @gluster_binary %> \
     volume create <%= @volume_name %> \
     replica <%= @replica %> \
-    arbiter <%= @arbiter %> \
     <%= @bricks.join(' ') %>
 
 <%= @gluster_binary %> \
