@@ -5,7 +5,7 @@ class vision_gluster::repo (
 
   String $release = $vision_gluster::release,
 
-  ) {
+) {
 
   $major = split($release, '\.')[0]
 
