@@ -1,43 +1,29 @@
-# Initialization
-
 # vision-gluster
 
 [![Build Status](https://travis-ci.org/vision-it/vision-gluster.svg?branch=production)](https://travis-ci.org/vision-it/vision-gluster)
 
 This module automatically configures the GlusterFS repositories, install the required gluster packages and adds some hints to to initialize a cluster and create a volume.
 
-## Setting Up a new Cluster
+## Bootrapping a new Cluster
 
-When setting up a new cluster, the peers (nodes) need to be introduced to each other first.
-The gluster daemon must be running for this (the module automatically does that).
-From one node the other peers need to be probe:
+When setting up a new cluster, the peers (nodes) need to be introduced to each other first. The gluster daemon must be running for this (the module automatically does that).
+
+Setting up the Pool:
+
 ```
-gluster peer probe bob
-gluster peer probe charlie
-```
+$ server1: gluster peer probe server2
+$ server1: gluster peer probe server3
+$ server2: gluster peer probe server1
 
-The status of the peers in the cluster can be checked with:
-```
-gluster pool list
-UUIDHostname           State
-5a72f064-4d63-4599-8fce-1abddc5ff682 alice     Connected
-f78a0252-1e02-4312-ab91-81b51afbf83e bob       Connected
-e5e7a94b-adfd-405e-ac96-fbca027a7044 localhost Connected
-vision11.prd (int) :: ~ : gluster peer status
-Number of Peers: 2
-
-Hostname: alice
-Uuid: 5a72f064-4d63-4599-8fce-1abddc5ff688
-State: Peer in Cluster (Connected)
-
-Hostname: bob
-Uuid: f78a0252-1e02-4312-ab91-81b51afbf831
-State: Peer in Cluster (Connected)
+$ server1: gluster pool list
 ```
 
-Afterwards, a new volume can be created and started.
-The module places a script for this task under `/usr/local/sbin/gluster-create-VOLUMENAME.sh`
-Once all nodes have been introduced to each other, this script can be run from any node and only has to be run once in the entire cluster.
+Setting up the Volume:
+
+```
+$ server1: gluster volume create volume1 replica 3 server1:/data/brick1/volume1 server2:/data/brick1/volume1 server2:/data/brick1/volume1
+$ server1: gluster volume start volume1
+```
 
 ## Usage
 
@@ -52,5 +38,6 @@ mod vision_gluster:
 Include in a role/profile:
 
 ```puppet
-contain ::vision_gluster
+contain ::vision_gluster::server
+contain ::vision_gluster::client
 ```

@@ -3,23 +3,27 @@
 
 class vision_gluster::repo (
 
-  String $release = $vision_gluster::release,
+  String $release,
+  String $repo_key,
+  String $repo_key_id,
 
 ) {
 
-  $major = split($release, '\.')[0]
-
   # set up gluster repo with appropriate version
   apt::source { 'glusterfs':
-    location => "http://download.gluster.org/pub/gluster/glusterfs/${major}/${release}/Debian/${::lsbdistcodename}/amd64/apt/",
-    release  => $::lsbdistcodename,
+    location => "http://download.gluster.org/pub/gluster/glusterfs/${release}/LATEST/Debian/${::lsbdistcodename}/amd64/apt/",
     repos    => 'main',
+    release  => $::lsbdistcodename,
     key      => {
-      id         => 'F9C958A3AEE0D2184FAD1CBD43607F0DC2F8238C',
-      key_source => "https://download.gluster.org/pub/gluster/glusterfs/${release}/rsa.pub",
+      id      => $repo_key_id,
+      content => $repo_key,
     },
     pin      => '500',
-    notify   => Exec['apt_update'],
+  }
+  -> exec { 'gluster-update':
+    command     => '/usr/bin/apt-get update',
+    logoutput   => 'on_failure',
+    refreshonly => true,
   }
 
 }
