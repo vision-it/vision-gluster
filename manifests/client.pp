@@ -32,7 +32,7 @@ class vision_gluster::client (
     atboot   => 'yes',
     dump     => 0,
     pass     => 0,
-    options  => 'defaults,_netdev',
+    options  => 'defaults,_netdev,noauto,x-systemd.automount',
     require  => Package['glusterfs-client'],
   }
 
