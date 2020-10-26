@@ -1,5 +1,19 @@
 # Class: vision_gluster::repo
 # ===========================
+#
+# Parameters
+# ----------
+#
+# @param release Basically LSB Distcodename
+# @param repo_key Key for the Gluster Apt repository
+# @param repo_key_id Key ID for the Gluster Apt repository
+#
+# Examples
+# --------
+#
+# @example
+# contain ::vision_gluster::repo
+#
 
 class vision_gluster::repo (
 

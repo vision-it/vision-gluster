@@ -1,6 +1,15 @@
 # Class: vision_gluster::client
 # ===========================
-
+#
+# Parameters
+# ----------
+#
+# @param mounts Mounts to create on the system
+#
+# Examples
+# --------
+#
+# @example
 # Manage GlusterFS Client Installation
 #
 # class { 'vision_gluster::client':
@@ -10,6 +19,7 @@
 #   }
 #  }
 # }
+#
 
 class vision_gluster::client (
 
@@ -21,7 +31,7 @@ class vision_gluster::client (
 
   package { 'glusterfs-client':
     ensure  => present,
-    require => Class['vision_gluster::repo']
+    require => Class['vision_gluster::repo'],
   }
 
   # User needs to provide source and target
