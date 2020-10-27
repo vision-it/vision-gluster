@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'vision_gluster::server' do
@@ -11,7 +13,6 @@ describe 'vision_gluster::server' do
         }
       FILE
       apply_manifest(setup, accept_all_exit_codes: true, catch_failures: false)
-
 
       pp = <<-FILE
         class { 'vision_gluster::server': }
