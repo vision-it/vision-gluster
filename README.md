@@ -1,6 +1,6 @@
 # vision-gluster
 
-[![Build Status](https://travis-ci.org/vision-it/vision-gluster.svg?branch=production)](https://travis-ci.org/vision-it/vision-gluster)
+[![Build Status](https://travis-ci.com/vision-it/vision-gluster.svg?branch=production)](https://travis-ci.com/vision-it/vision-gluster)
 
 This module automatically configures the GlusterFS repositories, install the required gluster packages and adds some hints to to initialize a cluster and create a volume.
 
