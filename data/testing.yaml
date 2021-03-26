@@ -1,12 +1,2 @@
 ---
-vision_gluster::node::replica: 2
-vision_gluster::node::arbiter: 0
-vision_gluster::node::volume_name: 'gv0'
-vision_gluster::node::mount_path: '/mnt/gluster'
-vision_gluster::node::brick_path: '/opt/brick1'
-vision_gluster::node::bricks:
-  - 'srv1.local:/export/brick1/brick'
-  - 'srv2.local:/export/brick1/brick'
-vision_gluster::node::peers:
-  - 'srv1.local'
-  - 'srv2.local'
+vision_gluster::client::mounts: {}

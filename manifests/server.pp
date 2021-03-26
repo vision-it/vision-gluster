@@ -8,6 +8,7 @@ class vision_gluster::server (
 
 ) {
 
+  # Using the GlusterFS Repo to get a newer version
   contain vision_gluster::repo
 
   package { 'glusterfs-server':
