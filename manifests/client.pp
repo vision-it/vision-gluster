@@ -27,6 +27,7 @@ class vision_gluster::client (
 
 ) {
 
+  # Using the GlusterFS Repo to get a newer version
   contain vision_gluster::repo
 
   package { 'glusterfs-client':
